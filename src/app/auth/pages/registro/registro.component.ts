@@ -33,16 +33,36 @@ validators:[this.validatorService.camposIguales('password','password2')]
   ngOnInit(): void {
     this.miFormulario.reset({
       nombre:'Felix Potente',
-      email: 'felix.potente@alten.es',
-      username: 'Felix86'
+      email: 'test1@test.com',
+      username: 'Felix86' ,
+      password: '123456',
+      password2: '123456'
     });
   }
 
+  get emailErrorMsg(){
+    const errors= this.miFormulario.get('email')?.errors;
+    if(errors?.required){
+      return 'Email es obligatorio';
+    }
+    
+    if(errors?.pattern){
+      return 'El valor ingresado no tiene formato de correo';
+    }
+    
+    if(errors?.emailTomado){
+      return 'El Email ya fue tomado';
+    }
+
+    return '';
+  }
 
   campoNoValido(campo:string){
     return this.miFormulario.get(campo)?.invalid
           && this.miFormulario.get(campo)?.touched
   }
+
+
 
   submitFormulario(){
     console.log(this.miFormulario.value );
