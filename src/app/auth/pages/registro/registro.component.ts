@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { nombreApellidoPattern } from 'src/app/shared/validator/validaciones';
+import { emailPattern, noPuedeSerStrider } from '../../../shared/validator/validaciones';
+import { ValidatorService } from '../../../shared/validator/validator.service';
+import { EmailValidatorService } from '../../../shared/validator/email-validator.service';
 
 @Component({
   selector: 'app-registro',
@@ -9,16 +13,29 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class RegistroComponent implements OnInit {
 
-//temporal
-nombreApellidoPattern: string ='([a-zñA-ZÑ]+) ([a-zñA-ZÑ]+)';
+
 
 miFormulario:FormGroup=this.fb.group({
-  nombre:['',[Validators.required,Validators.pattern(this.nombreApellidoPattern)]]
+  nombre:['',[Validators.required,Validators.pattern(this.validatorService.nombreApellidoPattern)]],
+  email:['',[Validators.required,Validators. pattern(this.validatorService.emailPattern)],[this.emailValidator]],
+  username:['',[Validators.required, this.validatorService.noPuedeSerStrider]],
+  password:['',[Validators.required, Validators.minLength(6)]],
+  password2:['',[Validators.required]]
+},{
+validators:[this.validatorService.camposIguales('password','password2')]
+
 });
 
-  constructor(private fb:FormBuilder) { }
+  constructor(private fb:FormBuilder,
+      private validatorService:ValidatorService,
+      private emailValidator:EmailValidatorService) { }
 
   ngOnInit(): void {
+    this.miFormulario.reset({
+      nombre:'Felix Potente',
+      email: 'felix.potente@alten.es',
+      username: 'Felix86'
+    });
   }
 
 
